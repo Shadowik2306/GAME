@@ -67,8 +67,12 @@ class Card(pygame.sprite.Sprite):
         global LAST_POS, diff_with_card
         if LAST_POS:
             x = LAST_POS[0] - pygame.mouse.get_pos()[0]
+            if pygame.mouse.get_pos()[0] not in range(int((WIDTH - 500 - WIDTH // 10) * 0.5), int((WIDTH - 500 - WIDTH // 10) * 0.5 + 500 + WIDTH // 10) + 1):
+                return
             self.rect.x -= x
             LAST_POS = (pygame.mouse.get_pos()[0], LAST_POS[1])
+        else:
+            self.rect.x = 350
 
 
 
