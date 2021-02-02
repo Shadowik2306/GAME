@@ -64,13 +64,11 @@ class Card(pygame.sprite.Sprite):
         self.rect.y = 325
 
     def update(self, *args, **kwargs):
-        global LAST_POS, diff_with_center
+        global LAST_POS, diff_with_card
         if LAST_POS:
-            print(diff_with_center)
-            if LAST_POS[0] - pygame.mouse.get_pos()[0] != 0:
-                x = LAST_POS[0] - (LAST_POS[0] - pygame.mouse.get_pos()[0])
-                self.rect.x = x + diff_with_center
-                LAST_POS = (self.rect.x, LAST_POS[1])
+            x = LAST_POS[0] - pygame.mouse.get_pos()[0]
+            self.rect.x -= x
+            LAST_POS = (pygame.mouse.get_pos()[0], LAST_POS[1])
 
 
 
@@ -102,7 +100,7 @@ while True:
         if event.type == pygame.QUIT:
             terminate()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            diff_with_center = (CENTER[0] - pygame.mouse.get_pos()[0]) * -1
+            diff_with_card = (card.rect.x - pygame.mouse.get_pos()[0]) * -1
             LAST_POS = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONUP:
             LAST_POS = False
