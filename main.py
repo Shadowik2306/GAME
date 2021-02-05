@@ -14,44 +14,62 @@ LAST_POS = False
 CENTER = (WIDTH // 2, HEIGHT // 2)
 
 
-class Church(pygame.sprite.Sprite):
+class Char:
+    def __init__(self):
+        self.percent = 50
+
+    def change_per(self, n, k):
+        self.percent += n
+        try:
+            self.image = pygame.transform.scale(load_image(f'char/{k}/{self.percent}%.png'), (100, 100))
+        except Exception:
+            print('Ты проиграл')
+
+
+class Church(pygame.sprite.Sprite, Char):
     def __init__(self):
         super().__init__(all_sprites)
         self.percent = 50
-        self.image = pygame.transform.scale(load_image('char/church/0%.png'), (100, 100))
+        self.image = pygame.transform.scale(load_image(f'char/church/{self.percent}%.png'), (100, 100))
         self.rect = self.image.get_rect()
         self.rect.x = ((WIDTH - 500 - WIDTH // 10) * 0.5 - 20) * 1.3
         self.rect.y = int(HEIGHT * 0.02)
 
 
-class Social(pygame.sprite.Sprite):
+class Social(pygame.sprite.Sprite, Char):
     def __init__(self):
         super().__init__(all_sprites)
         self.percent = 50
-        self.image = pygame.transform.scale(load_image('char/social/0%.png'), (100, 100))
+        self.image = pygame.transform.scale(load_image(f'char/social/{self.percent}%.png'), (100, 100))
         self.rect = self.image.get_rect()
         self.rect.x = ((WIDTH - 500 - WIDTH // 10) * 0.5 - 20) * 2
         self.rect.y = int(HEIGHT * 0.02)
 
 
-class Army(pygame.sprite.Sprite):
+class Army(pygame.sprite.Sprite, Char):
     def __init__(self):
         super().__init__(all_sprites)
         self.percent = 50
-        self.image = pygame.transform.scale(load_image('char/army/0%.png'), (100, 100))
+        self.image = pygame.transform.scale(load_image(f'char/army/{self.percent}%.png'), (100, 100))
         self.rect = self.image.get_rect()
         self.rect.x = ((WIDTH - 500 - WIDTH // 10) * 0.5 - 20) * 2.9
         self.rect.y = int(HEIGHT * 0.02)
 
 
-class Money(pygame.sprite.Sprite):
+class Money(pygame.sprite.Sprite, Char):
     def __init__(self):
         super().__init__(all_sprites)
         self.percent = 50
-        self.image = pygame.transform.scale(load_image('char/money/0%.png'), (100, 100))
+        self.image = pygame.transform.scale(load_image(f'char/money/{self.percent}%.png'), (100, 100))
         self.rect = self.image.get_rect()
         self.rect.x = ((WIDTH - 500 - WIDTH // 10) * 0.5 - 20) * 3.6
         self.rect.y = int(HEIGHT * 0.02)
+
+
+church = Church()
+social = Social()
+army = Army()
+money = Money()
 
 
 class Card(pygame.sprite.Sprite):
@@ -76,14 +94,13 @@ class Card(pygame.sprite.Sprite):
         else:
             self.rect.x = 350
 
+    def check(self):
+        if self.rect.x not in range(150, 450):
+            print(self.rect.x)
+            church.change_per(-10, 'church')
 
 
 
-
-church = Church()
-social = Social()
-army = Army()
-money = Money()
 card = Card()
 
 
@@ -111,6 +128,7 @@ while True:
             LAST_POS = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONUP:
             LAST_POS = False
+            card.check()
     all_sprites.update()
     all_sprites.draw(screen)
     pygame.display.flip()
