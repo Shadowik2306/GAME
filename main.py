@@ -1,5 +1,7 @@
 from sys_func import *
 import pygame
+import sqlite3
+import random
 
 
 pygame.init()
@@ -12,6 +14,11 @@ all_sprites = pygame.sprite.Group()
 
 LAST_POS = False
 CENTER = (WIDTH // 2, HEIGHT // 2)
+
+con = sqlite3.connect('data/card/Cards.db')
+cur = con.cursor()
+result = cur.execute("""SELECT * FROM cards""").fetchall()
+
 
 
 class Char:
@@ -75,8 +82,8 @@ money = Money()
 class Card(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__(all_sprites)
-        self.image = pygame.Surface((300, 400))
-        self.image.fill((255, 255, 255))
+        self.choose = random.choice(result)
+        self.image = pygame.transform.scale(load_image(f'card/{self.choose[1]}.jpg', -1), (300, 400))
         self.rect = self.image.get_rect()
         self.rect.x = 350
         self.rect.y = 325
@@ -96,8 +103,14 @@ class Card(pygame.sprite.Sprite):
 
     def check(self):
         if self.rect.x not in range(150, 450):
-            print(self.rect.x)
-            church.change_per(-10, 'church')
+            if self.rect.x < 150:
+                lst = list(map(int, self.choose[2].split()))
+            else:
+                lst = list(map(int, self.choose[3].split()))
+            church.change_per(lst[0], 'church')
+            social.change_per(lst[1], 'social')
+            army.change_per(lst[2], 'army')
+            money.change_per(lst[3], 'money')
 
 
 
