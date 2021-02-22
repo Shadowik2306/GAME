@@ -17,8 +17,8 @@ CENTER = (WIDTH // 2, HEIGHT // 2)
 
 con = sqlite3.connect('data/card/Cards.db')
 cur = con.cursor()
-result = cur.execute("""SELECT * FROM cards""").fetchall()
-
+result = list((cur.execute("""SELECT * FROM cards""").fetchall()))
+used = []
 
 
 class Char:
@@ -31,6 +31,7 @@ class Char:
             self.image = pygame.transform.scale(load_image(f'char/{k}/{self.percent}%.png'), (100, 100))
         except Exception:
             print('Ты проиграл')
+            sys.exit(-1)
 
 
 class Church(pygame.sprite.Sprite, Char):
@@ -82,8 +83,11 @@ money = Money()
 class Card(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__(all_sprites)
-        self.choose = random.choice(result)
-        self.image = pygame.transform.scale(load_image(f'card/{self.choose[1]}.jpg', -1), (300, 400))
+        k = random.choice(range(len(result)))
+        self.choose = result[k]
+        used.append(result[k])
+        del result[k]
+        self.image = pygame.transform.scale(add_text(load_image(f'card/{self.choose[1]}.jpg', -1), self.choose[0]), (300, 400))
         self.rect = self.image.get_rect()
         self.rect.x = 350
         self.rect.y = 325
@@ -102,16 +106,28 @@ class Card(pygame.sprite.Sprite):
             self.rect.x = 350
 
     def check(self):
-        if self.rect.x not in range(150, 450):
-            if self.rect.x < 150:
+        global result, used
+        if self.rect.x not in range(300, 450):
+            if self.rect.x < 300:
                 lst = list(map(int, self.choose[2].split()))
             else:
                 lst = list(map(int, self.choose[3].split()))
+            k = random.choice(range(len(result)))
+            self.choose = result[k]
+            used.append(result[k])
+            del result[k]
+            if not result:
+                result = used.copy()
+                used = []
+            self.image = pygame.transform.scale(
+                add_text(load_image(f'card/{self.choose[1]}.jpg', -1), self.choose[0]), (300, 400))
+            self.rect = self.image.get_rect()
+            self.rect.x = 350
+            self.rect.y = 325
             church.change_per(lst[0], 'church')
             social.change_per(lst[1], 'social')
             army.change_per(lst[2], 'army')
             money.change_per(lst[3], 'money')
-
 
 
 card = Card()
@@ -127,8 +143,6 @@ def set_background():
     upper.fill((122, 75, 56))
     screen.blit(upper, ((WIDTH - 500 - WIDTH // 10) * 0.5, 0))
     screen.blit(upper, ((WIDTH - 500 - WIDTH // 10) * 0.5, int(HEIGHT * 0.85)))
-
-
 
 
 while True:
