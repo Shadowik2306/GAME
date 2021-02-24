@@ -16,23 +16,31 @@ def load_image(name, colorkey=None):
 
 
 def add_text(image, text):
-    text = text.split(' ')
+    text = text.replace(',', '').strip().capitalize().split(' ')
     if len(text) > 3:
-        change = []
+        change = len(text)
+        i = 0
         for i in range(len(text) // 3):
             text[i] = ' '.join(text[i:i + 3])
             del text[i + 1]
             del text[i + 1]
+        if change / 3 % 1 != 0:
+            try:
+                text[i + 1] = ' '.join(text[i + 1:])
+                while True:
+                    del text[i + 2]
+            except Exception:
+                pass
     else:
         text = [' '.join(text)]
     text_coord = 1000
-    font = pygame.font.SysFont(None, 70)
+    font = pygame.font.SysFont('Comic Sans', 65)
     for line in text:
         string_rendered = font.render(line, False, pygame.Color('black'))
         intro_rect = string_rendered.get_rect()
         text_coord += 10
         intro_rect.top = text_coord
-        intro_rect.x = 210
+        intro_rect.x = 240
         text_coord += intro_rect.height
         image.blit(string_rendered, intro_rect)
     return image
