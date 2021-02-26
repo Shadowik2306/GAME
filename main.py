@@ -40,6 +40,11 @@ class Char:
             print(f"Cчет: {final_score}", k)
             game_over(self.percent, k)
 
+    def real_change(self):
+        round = pygame.Surface((10, 10))
+        pygame.draw.circle(round, (255, 255, 255), (5, 5), 5)
+        screen.blit(round, (self.rect.x + 43, self.rect.y + 110))
+
 
 class Church(pygame.sprite.Sprite, Char):
     def __init__(self):
@@ -118,8 +123,18 @@ class Card(pygame.sprite.Sprite):
                 font = pygame.font.SysFont(None, 30)
                 if self.rect.x < 300:
                     text = self.choose[4].strip().capitalize()
+                    lst = list(map(int, self.choose[2].split()))
                 else:
                     text = self.choose[5].strip().capitalize()
+                    lst = list(map(int, self.choose[3].split()))
+                if lst[0]:
+                    church.real_change()
+                if lst[1]:
+                    social.real_change()
+                if lst[2]:
+                    army.real_change()
+                if lst[3]:
+                    money.real_change()
                 text = font.render(text, False, (0, 0, 0))
                 screen.blit(text, (225, 750))
         else:
@@ -203,8 +218,11 @@ def game_over(n, k):
             text = [font.render('Нужно больше золота!', False, (255, 255, 255))]
     y = 0
     for i in text:
-        screen.blit(i, (y, 0))
-        y += 20
+        screen.blit(i, (0, y))
+        y += 30
+
+    text = font.render(f'Cчет: {final_score}', False, pygame.color.Color('white'))
+    screen.blit(text, (0, y + 50))
     pygame.display.flip()
 
 
