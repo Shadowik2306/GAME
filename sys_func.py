@@ -34,7 +34,7 @@ def add_text(image, text):
     else:
         text = [' '.join(text)]
     text_coord = 1000
-    font = pygame.font.SysFont('Comic Sans', 65)
+    font = pygame.font.SysFont('Ariel', 65)
     for line in text:
         string_rendered = font.render(line, False, pygame.Color('black'))
         intro_rect = string_rendered.get_rect()

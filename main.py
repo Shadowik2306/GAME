@@ -5,7 +5,7 @@ import random
 
 
 pygame.init()
-size = WIDTH, HEIGHT = 1000, 1000
+size = WIDTH, HEIGHT = 700, 700
 screen = pygame.display.set_mode(size)
 FPS = 50
 clock = pygame.time.Clock()
@@ -30,7 +30,7 @@ class Char:
         self.percent += n
         try:
             self.image = pygame.transform.scale(load_image(f'char/{k}/{self.percent}%.png'),
-                                                (100, 100))
+                                                (75, 75))
             if self.percent == 100:
                 raise Exception
             if self.percent == 0:
@@ -43,7 +43,7 @@ class Char:
     def real_change(self):
         round = pygame.Surface((10, 10))
         pygame.draw.circle(round, (255, 255, 255), (5, 5), 5)
-        screen.blit(round, (self.rect.x + 43, self.rect.y + 110))
+        screen.blit(round, (self.rect.x + 33, self.rect.y + 80))
 
 
 class Church(pygame.sprite.Sprite, Char):
@@ -51,9 +51,9 @@ class Church(pygame.sprite.Sprite, Char):
         super().__init__(all_sprites)
         self.percent = 50
         self.image = pygame.transform.scale(load_image(f'char/church/{self.percent}%.png'),
-                                            (100, 100))
+                                            (75, 75))
         self.rect = self.image.get_rect()
-        self.rect.x = ((WIDTH - 500 - WIDTH // 10) * 0.5 - 20) * 1.3
+        self.rect.x = ((WIDTH - 330 - WIDTH // 10) * 0.5 - 20) * 1.3
         self.rect.y = int(HEIGHT * 0.02)
 
 
@@ -62,9 +62,9 @@ class Social(pygame.sprite.Sprite, Char):
         super().__init__(all_sprites)
         self.percent = 50
         self.image = pygame.transform.scale(load_image(f'char/social/{self.percent}%.png'),
-                                            (100, 100))
+                                            (75, 75))
         self.rect = self.image.get_rect()
-        self.rect.x = ((WIDTH - 500 - WIDTH // 10) * 0.5 - 20) * 2
+        self.rect.x = ((WIDTH - 330 - WIDTH // 10) * 0.5 - 20) * 2
         self.rect.y = int(HEIGHT * 0.02)
 
 
@@ -73,9 +73,9 @@ class Army(pygame.sprite.Sprite, Char):
         super().__init__(all_sprites)
         self.percent = 50
         self.image = pygame.transform.scale(load_image(f'char/army/{self.percent}%.png'),
-                                            (100, 100))
+                                            (75, 75))
         self.rect = self.image.get_rect()
-        self.rect.x = ((WIDTH - 500 - WIDTH // 10) * 0.5 - 20) * 2.9
+        self.rect.x = ((WIDTH - 330 - WIDTH // 10) * 0.5 - 20) * 2.9
         self.rect.y = int(HEIGHT * 0.02)
 
 
@@ -84,9 +84,9 @@ class Money(pygame.sprite.Sprite, Char):
         super().__init__(all_sprites)
         self.percent = 50
         self.image = pygame.transform.scale(load_image(f'char/money/{self.percent}%.png'),
-                                            (100, 100))
+                                            (75, 75))
         self.rect = self.image.get_rect()
-        self.rect.x = ((WIDTH - 500 - WIDTH // 10) * 0.5 - 20) * 3.6
+        self.rect.x = ((WIDTH - 330 - WIDTH // 10) * 0.5 - 20) * 3.6
         self.rect.y = int(HEIGHT * 0.02)
 
 
@@ -104,24 +104,24 @@ class Card(pygame.sprite.Sprite):
         used.append(result[k])
         del result[k]
         self.image = pygame.transform.scale(add_text(load_image(f'card/{self.choose[1]}.jpg', -1),
-                                                     self.choose[0]), (300, 400))
+                                                     self.choose[0]), (250, 350))
         self.rect = self.image.get_rect()
-        self.rect.x = 350
-        self.rect.y = 325
+        self.rect.x = 225
+        self.rect.y = 200
 
     def update(self, *args, **kwargs):
         global LAST_POS, diff_with_card
         if LAST_POS:
             x = LAST_POS[0] - pygame.mouse.get_pos()[0]
-            if pygame.mouse.get_pos()[0] not in range(int((WIDTH - 500 - WIDTH // 10) * 0.5),
-                                                      int((WIDTH - 500 - WIDTH // 10) * 0.5
-                                                          + 500 + WIDTH // 10) + 1):
-                return
+            if pygame.mouse.get_pos()[0] not in range(int((WIDTH - 350 - WIDTH // 10) * 0.5),
+                                                      int((WIDTH - 350 - WIDTH // 10) * 0.5
+                                                          + 350 + WIDTH // 10) + 1):
+                 x = 0
             self.rect.x -= x
             LAST_POS = (pygame.mouse.get_pos()[0], LAST_POS[1])
-            if self.rect.x not in range(300, 450):
-                font = pygame.font.SysFont(None, 30)
-                if self.rect.x < 300:
+            if self.rect.x not in range(200, 350):
+                font = pygame.font.SysFont(None, 25)
+                if self.rect.x < 200:
                     text = self.choose[4].strip().capitalize()
                     lst = list(map(int, self.choose[2].split()))
                 else:
@@ -136,14 +136,14 @@ class Card(pygame.sprite.Sprite):
                 if lst[3]:
                     money.real_change()
                 text = font.render(text, False, (0, 0, 0))
-                screen.blit(text, (225, 750))
+                screen.blit(text, (150, 550))
         else:
-            self.rect.x = 350
+            self.rect.x = 225
 
     def check(self):
         global result, used, final_score
-        if self.rect.x not in range(300, 450):
-            if self.rect.x < 300:
+        if self.rect.x not in range(200, 350):
+            if self.rect.x < 200:
                 lst = list(map(int, self.choose[2].split()))
             else:
                 lst = list(map(int, self.choose[3].split()))
@@ -156,10 +156,10 @@ class Card(pygame.sprite.Sprite):
                 result = used.copy()
                 used = []
             self.image = pygame.transform.scale(
-                add_text(load_image(f'card/{self.choose[1]}.jpg', -1), self.choose[0]), (300, 400))
+                add_text(load_image(f'card/{self.choose[1]}.jpg', -1), self.choose[0]), (250, 350))
             self.rect = self.image.get_rect()
-            self.rect.x = 350
-            self.rect.y = 325
+            self.rect.x = 225
+            self.rect.y = 200
             church.change_per(lst[0], 'church')
             social.change_per(lst[1], 'social')
             army.change_per(lst[2], 'army')
@@ -173,13 +173,13 @@ card = Card()
 def set_background():
     fon = pygame.transform.scale(load_image('background.jpg'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
-    play_zone = pygame.Surface((500 + WIDTH // 10, HEIGHT))
+    play_zone = pygame.Surface((350 + WIDTH // 10, HEIGHT))
     play_zone.fill((240, 214, 152))
-    screen.blit(play_zone, ((WIDTH - 500 - WIDTH // 10) * 0.5, 0))
-    upper = pygame.Surface((500 + WIDTH // 10, int(HEIGHT * 0.15)))
+    screen.blit(play_zone, ((WIDTH - 350 - WIDTH // 10) * 0.5, 0))
+    upper = pygame.Surface((350 + WIDTH // 10, int(HEIGHT * 0.15)))
     upper.fill((122, 75, 56))
-    screen.blit(upper, ((WIDTH - 500 - WIDTH // 10) * 0.5, 0))
-    screen.blit(upper, ((WIDTH - 500 - WIDTH // 10) * 0.5, int(HEIGHT * 0.85)))
+    screen.blit(upper, ((WIDTH - 350 - WIDTH // 10) * 0.5, 0))
+    screen.blit(upper, ((WIDTH - 350 - WIDTH // 10) * 0.5, int(HEIGHT * 0.85)))
 
 
 def game_over(n, k):
@@ -188,7 +188,7 @@ def game_over(n, k):
     fon.fill((0, 0, 0))
     screen.blit(fon, (0, 0))
     running = True
-    font = pygame.font.SysFont(None, 60)
+    font = pygame.font.SysFont(None, 40)
     if k == 'church':
         if n >= 100:
             text = [font.render('Вас распяли как святого', False, (255, 255, 255))]
@@ -233,7 +233,6 @@ def game_over(n, k):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     print(church)
-                    print(church)
                     screen.fill((0, 0, 0))
                     set_background()
                     running = False
@@ -254,11 +253,13 @@ while True:
         if event.type == pygame.QUIT:
             terminate()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            diff_with_card = (card.rect.x - pygame.mouse.get_pos()[0]) * -1
-            LAST_POS = pygame.mouse.get_pos()
+            if event.button == pygame.BUTTON_LEFT:
+                diff_with_card = (card.rect.x - pygame.mouse.get_pos()[0]) * -1
+                LAST_POS = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONUP:
-            LAST_POS = False
-            card.check()
+            if event.button == pygame.BUTTON_LEFT:
+                LAST_POS = False
+                card.check()
     all_sprites.update()
     all_sprites.draw(screen)
     pygame.display.flip()
